@@ -23,21 +23,67 @@ Optional metadata:
 
 Preprocessed data: data/processed/ (train/val/test)
 
-## Methodology
-We use a 70/15/15 train/validation/test split (seed=42):
-- Train: fit model parameters
-- Validation: select hyperparameters / best epoch
-- Test: final evaluation once
+## 🧪 Methodology
 
-Metrics:
-- MAE, RMSE, R²
+### Data Preprocessing
+- Concatenate `Reviews Title` + `Reviews Text` into a single `text` column.
+- Minimal text normalization: lowercasing, HTML tag removal, whitespace normalization.
+- Drop rows with missing/invalid target (`Reviews Rating`).
+- **Final sample size:** 2,445 reviews.
 
-## How to run
-1. Install requirements
-2. Run notebook or scripts
+### Data Split
+- **70% Train / 15% Validation / 15% Test**
+- Stratified split to preserve class distribution across splits.
+- Random seed: `42`
 
-## Results
-See results/metrics.json
+### Models Compared
+
+| Model | Type | Description |
+|-------|------|-------------|
+| DummyRegressor (mean) | Baseline | Always predicts the training mean |
+| TF-IDF + Ridge | Classical | TF-IDF vectorization (ngram 1–2, min_df=2) + Ridge Regression with GridSearchCV |
+| DistilBERT (fine-tuned) | Neural | Hugging Face `distilbert-base-uncased` fine-tuned for regression (1 output neuron) |
+
+### Hyperparameter Tuning
+- **Ridge:** GridSearchCV over `alpha ∈ {0.1, 1.0, 10.0}` and `max_features ∈ {10000, 20000}`, 5-fold CV, scored by negative MAE.
+- **DistilBERT:** Fixed hyperparameters (learning_rate=2e-5, epochs=2, batch_size=8, weight_decay=0.01). Best model selected on validation MAE.
+
+### Evaluation Metrics
+- **MAE** (Mean Absolute Error)
+- **RMSE** (Root Mean Squared Error)
+- **R²** (Coefficient of Determination)
+
+All metrics are computed **once** on the held-out test set for fair comparison.
+
+---
+
+## 🚀 How to Run
+
+### Prerequisites
+- numpy
+- pandas
+- scikit-learn
+- torch
+- transformers
+- datasets
+- matplotlib
+- joblib
+- ipywidgets
+```bash
+pip install numpy pandas scikit-learn torch transformers datasets matplotlib joblib
+
+### Reproducing Results 
+
+This repository does not include trained model weights due to their size.
+To regenerate all models and results:
+
+1. Run all cells in `ML-project.ipynb`
+2. Training takes ~8 minutes on CPU (DistilBERT, 2 epochs)
+3. Models and metrics will be saved to the `results/` folder
+
+Models generated:
+- `results/ridge_model.joblib` (~small)
+- `results/distilbert_model/` (~260MB)
 
 ## Authors
 FLORE FAILA NGOY ZOLA
