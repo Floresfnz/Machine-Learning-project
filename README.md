@@ -60,6 +60,7 @@ All metrics are computed **once** on the held-out test set for fair comparison.
 ## 🚀 How to Run
 
 ### Prerequisites
+- pip install numpy pandas scikit-learn torch transformers datasets matplotlib joblib
 - numpy
 - pandas
 - scikit-learn
@@ -69,8 +70,7 @@ All metrics are computed **once** on the held-out test set for fair comparison.
 - matplotlib
 - joblib
 - ipywidgets
-```bash
-pip install numpy pandas scikit-learn torch transformers datasets matplotlib joblib
+- pip install numpy pandas scikit-learn torch transformers datasets matplotlib joblib
 
 ### Reproducing Results 
 
